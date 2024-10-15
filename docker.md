@@ -4,4 +4,4 @@
 - syntax
   - FROM <baseImage>:<version>
   - FROM centos:9
-- It should be the first instructon 
+- It should be the first instructon, Because we need the baseOS to run 
