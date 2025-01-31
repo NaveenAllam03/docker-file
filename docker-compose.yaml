@@ -1,0 +1,61 @@
+networks:
+  defaults:
+    external: 
+      name: rshop
+
+volumes:
+  mysql: # this is equal to (docker volueme create <name of the volueme to be created>)
+  mongodb:
+  rabbitmq:
+  redis:
+
+services: 
+# each section does (docker run -d --name maongodb --network=rshop)
+  mongodb:
+    image: mongodb:1.0
+    container_name: mongodb
+    volumes:
+     - source: mongodb # this we are attaching to (mongodb default location)
+       target: /data/db # this the default mongodb storage to store data
+       type: volume
+    # network is taken defaultly, because we mentioned it in the top.
+
+  catalogue:
+    image: catalogue:1.0  
+    container_name: catalogue   
+    depends_on:
+      - mongodb
+
+  web:
+    image: web.1.0
+    container_name: web
+    ports:
+    - "80:80"
+    depends_on:
+      catalogue
+
+  redis:
+    image: redis
+    container_name: redis
+    volumes:
+     - source: redis
+       target: /data
+       type: volume
+  
+  mysql:
+    image: mysql:v1
+    container_name: mysql
+    volumes:
+     - source: mysql
+       target: /var/lib/mysql
+       type: volume
+
+  rabbitmq:
+    image: rabbitmq:v1
+    container_name: rabbitmq
+    
+    volumes:
+     - source: rabbitmq
+       target: /var/lib/rabbitmq
+       type: volume     
+    
